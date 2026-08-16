@@ -23,9 +23,19 @@ func TestUpdateAndTopN(t *testing.T) {
 func TestGetRank(t *testing.T) {
 	lb := New()
 	lb.UpdateScore("alice", 100)
-	r := lb.GetRank("alice")
-	if r < 0 {
-		t.Errorf("expected non-negative rank, got %d", r)
+	lb.UpdateScore("bob", 200)
+	lb.UpdateScore("carol", 150)
+
+	// Ranks are 1-based: the top scorer is rank 1.
+	cases := map[string]int{
+		"bob":   1,
+		"carol": 2,
+		"alice": 3,
+	}
+	for uid, want := range cases {
+		if got := lb.GetRank(uid); got != want {
+			t.Errorf("GetRank(%q) = %d, want %d", uid, got, want)
+		}
 	}
 }
 

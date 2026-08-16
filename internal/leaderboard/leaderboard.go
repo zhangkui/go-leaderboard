@@ -32,7 +32,7 @@ func (lb *Leaderboard) UpdateScore(userID string, score int64) error {
 func (lb *Leaderboard) GetRank(userID string) int {
 	for i, uid := range lb.order {
 		if uid == userID {
-			return i
+			return i + 1
 		}
 	}
 	return -1
