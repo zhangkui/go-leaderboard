@@ -1,0 +1,15 @@
+package leaderboard
+
+import "testing"
+
+func TestPrivateUpdateScoreRejectsNegative(t *testing.T) {
+	lb := New()
+	err := lb.UpdateScore("alice", -50)
+	if err == nil {
+		t.Error("expected error for negative score, got nil")
+	}
+	// positive score should still work
+	if err := lb.UpdateScore("bob", 100); err != nil {
+		t.Errorf("expected no error for positive score, got %v", err)
+	}
+}

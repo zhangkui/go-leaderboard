@@ -54,3 +54,25 @@ func TestUpdateScoreChanges(t *testing.T) {
 		t.Errorf("expected score 50 after update, got %d", entry.Score)
 	}
 }
+
+func TestUpdateScoreZeroAllowed(t *testing.T) {
+	lb := New()
+	if err := lb.UpdateScore("alice", 0); err != nil {
+		t.Fatalf("zero score should be allowed, got %v", err)
+	}
+	entry := lb.GetUserEntry("alice")
+	if entry.Score != 0 {
+		t.Errorf("expected score 0, got %d", entry.Score)
+	}
+}
+
+func TestUpdateScoreRejectsNegative(t *testing.T) {
+	lb := New()
+	if err := lb.UpdateScore("alice", -50); err == nil {
+		t.Fatal("expected error for negative score, got nil")
+	}
+	// A rejected update must not pollute the leaderboard.
+	if entry := lb.GetUserEntry("alice"); entry != nil {
+		t.Errorf("expected alice to be absent after rejected update, got %+v", entry)
+	}
+}

@@ -1,6 +1,9 @@
 package leaderboard
 
-import "sort"
+import (
+	"fmt"
+	"sort"
+)
 
 // Entry represents a single user's leaderboard entry.
 type Entry struct {
@@ -22,7 +25,12 @@ func New() *Leaderboard {
 }
 
 // UpdateScore sets the user's score and re-sorts the leaderboard.
+// Negative scores are rejected so the leaderboard cannot be polluted
+// with invalid entries that would skew rankings.
 func (lb *Leaderboard) UpdateScore(userID string, score int64) error {
+	if score < 0 {
+		return fmt.Errorf("score must be non-negative, got %d", score)
+	}
 	lb.scores[userID] = score
 	lb.resort()
 	return nil

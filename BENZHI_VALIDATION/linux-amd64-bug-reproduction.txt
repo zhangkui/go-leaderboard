@@ -1,0 +1,2 @@
+base 红: expected error for negative score, got nil
+fixed 绿: ok (20×通过)
