@@ -23,9 +23,13 @@ func TestUpdateAndTopN(t *testing.T) {
 func TestGetRank(t *testing.T) {
 	lb := New()
 	lb.UpdateScore("alice", 100)
-	r := lb.GetRank("alice")
-	if r < 0 {
-		t.Errorf("expected non-negative rank, got %d", r)
+	lb.UpdateScore("bob", 200)
+
+	if r := lb.GetRank("bob"); r != 1 {
+		t.Errorf("expected bob to be rank 1, got %d", r)
+	}
+	if r := lb.GetRank("alice"); r != 2 {
+		t.Errorf("expected alice to be rank 2, got %d", r)
 	}
 }
 
