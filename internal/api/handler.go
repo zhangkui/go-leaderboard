@@ -82,7 +82,7 @@ func (h *Handler) leaderboard(w http.ResponseWriter, r *http.Request) {
 		size = 10
 	}
 	all := h.lb.All()
-	offset := page * size
+	offset := (page - 1) * size
 	if offset >= len(all) {
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode([]leaderboard.Entry{})

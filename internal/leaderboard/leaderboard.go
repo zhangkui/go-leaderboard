@@ -83,6 +83,13 @@ func (lb *Leaderboard) resort() {
 		lb.order = append(lb.order, uid)
 	}
 	sort.Slice(lb.order, func(i, j int) bool {
-		return lb.scores[lb.order[i]] > lb.scores[lb.order[j]]
+		left := lb.order[i]
+		right := lb.order[j]
+		leftScore := lb.scores[left]
+		rightScore := lb.scores[right]
+		if leftScore == rightScore {
+			return left < right
+		}
+		return leftScore > rightScore
 	})
 }
