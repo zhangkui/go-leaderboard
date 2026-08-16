@@ -51,6 +51,10 @@ func (h *Handler) rank(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	entry := h.lb.GetUserEntry(userID)
+	if entry == nil {
+		http.Error(w, "user not found", http.StatusNotFound)
+		return
+	}
 	rank := h.lb.GetRank(userID)
 	resp := map[string]any{
 		"user_id": entry.UserID,

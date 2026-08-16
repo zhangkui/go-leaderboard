@@ -1,0 +1,2 @@
+base 红: handler panicked for missing user: runtime error: invalid memory address or nil pointer dereference
+fixed 绿: ok (20×通过)

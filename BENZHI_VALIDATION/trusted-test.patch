@@ -1,0 +1,27 @@
+package api
+
+import (
+	"net/http"
+	"net/http/httptest"
+	"testing"
+
+	"go-leaderboard/internal/leaderboard"
+)
+
+func TestPrivateRankMissingReturns404(t *testing.T) {
+	lb := leaderboard.New()
+	mux := NewMux(lb)
+	req := httptest.NewRequest(http.MethodGet, "/rank/nobody", nil)
+	rec := httptest.NewRecorder()
+
+	defer func() {
+		if r := recover(); r != nil {
+			t.Errorf("handler panicked for missing user: %v", r)
+		}
+	}()
+	mux.ServeHTTP(rec, req)
+
+	if rec.Code != http.StatusNotFound {
+		t.Errorf("expected 404 for missing user, got %d", rec.Code)
+	}
+}

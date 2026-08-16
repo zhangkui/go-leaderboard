@@ -46,6 +46,18 @@ func TestRank(t *testing.T) {
 	}
 }
 
+func TestRankMissing(t *testing.T) {
+	lb := leaderboard.New()
+	mux := NewMux(lb)
+
+	req := httptest.NewRequest(http.MethodGet, "/rank/nobody", nil)
+	w := httptest.NewRecorder()
+	mux.ServeHTTP(w, req)
+	if w.Code != http.StatusNotFound {
+		t.Fatalf("expected 404 for missing user, got %d", w.Code)
+	}
+}
+
 func TestBadScore(t *testing.T) {
 	lb := leaderboard.New()
 	mux := NewMux(lb)
