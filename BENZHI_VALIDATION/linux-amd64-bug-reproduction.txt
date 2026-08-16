@@ -1,0 +1,6 @@
+base 红复现（修复前）:
+--- FAIL: TestPrivateGetRankOneBased (0.00s)
+    rank_onebased_private_test.go:12: expected rank 1 for top user, got 0
+    rank_onebased_private_test.go:17: expected rank 2 for second user, got 1
+fixed 绿（修复后）:
+ok  go-leaderboard/internal/leaderboard (20×通过)

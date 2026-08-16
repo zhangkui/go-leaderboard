@@ -1,0 +1,5 @@
+私有测试 20×: ok go-leaderboard/internal/leaderboard (20次通过)
+公开回归: ok go-leaderboard/internal/api, ok go-leaderboard/internal/leaderboard
+go build: BUILD_OK
+离线检查: 无 downloading
+无答案材料: 镜像不含 private_tests/bug_fix_prompts/gold_patch

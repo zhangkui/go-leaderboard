@@ -1,0 +1,19 @@
+package leaderboard
+
+import "testing"
+
+func TestPrivateGetRankOneBased(t *testing.T) {
+	lb := New()
+	lb.UpdateScore("alice", 100)
+	lb.UpdateScore("bob", 200)
+	// bob is the highest, should be rank 1
+	r := lb.GetRank("bob")
+	if r != 1 {
+		t.Errorf("expected rank 1 for top user, got %d", r)
+	}
+	// alice is second, should be rank 2
+	r2 := lb.GetRank("alice")
+	if r2 != 2 {
+		t.Errorf("expected rank 2 for second user, got %d", r2)
+	}
+}

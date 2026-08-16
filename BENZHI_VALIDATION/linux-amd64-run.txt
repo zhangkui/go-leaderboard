@@ -1,0 +1,4 @@
+docker run --rm --platform linux/amd64 go-leaderboard-bug1-candidate bash -c "go version"
+=> go version go1.22.12 linux/amd64
+docker run --rm --platform linux/amd64 go-leaderboard-bug1-candidate bash -c "go build ./..."
+=> BUILD_OK
