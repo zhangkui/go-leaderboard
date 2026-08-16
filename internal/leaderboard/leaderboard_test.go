@@ -4,9 +4,15 @@ import "testing"
 
 func TestUpdateAndTopN(t *testing.T) {
 	lb := New()
-	lb.UpdateScore("alice", 100)
-	lb.UpdateScore("bob", 200)
-	lb.UpdateScore("carol", 150)
+	if err := lb.UpdateScore("alice", 100); err != nil {
+		t.Fatal(err)
+	}
+	if err := lb.UpdateScore("bob", 200); err != nil {
+		t.Fatal(err)
+	}
+	if err := lb.UpdateScore("carol", 150); err != nil {
+		t.Fatal(err)
+	}
 
 	top := lb.TopN(2)
 	if len(top) != 2 {
@@ -22,7 +28,9 @@ func TestUpdateAndTopN(t *testing.T) {
 
 func TestGetRank(t *testing.T) {
 	lb := New()
-	lb.UpdateScore("alice", 100)
+	if err := lb.UpdateScore("alice", 100); err != nil {
+		t.Fatal(err)
+	}
 	r := lb.GetRank("alice")
 	if r < 0 {
 		t.Errorf("expected non-negative rank, got %d", r)
@@ -38,7 +46,9 @@ func TestGetRankMissing(t *testing.T) {
 
 func TestTopNLargeN(t *testing.T) {
 	lb := New()
-	lb.UpdateScore("alice", 100)
+	if err := lb.UpdateScore("alice", 100); err != nil {
+		t.Fatal(err)
+	}
 	top := lb.TopN(10)
 	if len(top) != 1 {
 		t.Errorf("expected 1 entry, got %d", len(top))
@@ -47,10 +57,24 @@ func TestTopNLargeN(t *testing.T) {
 
 func TestUpdateScoreChanges(t *testing.T) {
 	lb := New()
-	lb.UpdateScore("alice", 100)
-	lb.UpdateScore("alice", 50)
+	if err := lb.UpdateScore("alice", 100); err != nil {
+		t.Fatal(err)
+	}
+	if err := lb.UpdateScore("alice", 50); err != nil {
+		t.Fatal(err)
+	}
 	entry := lb.GetUserEntry("alice")
 	if entry.Score != 50 {
 		t.Errorf("expected score 50 after update, got %d", entry.Score)
+	}
+}
+
+func TestUpdateScoreRejectsNegativeScore(t *testing.T) {
+	lb := New()
+	if err := lb.UpdateScore("alice", -50); err != ErrNegativeScore {
+		t.Fatalf("expected ErrNegativeScore, got %v", err)
+	}
+	if entry := lb.GetUserEntry("alice"); entry != nil {
+		t.Fatalf("expected no entry to be created, got %+v", entry)
 	}
 }

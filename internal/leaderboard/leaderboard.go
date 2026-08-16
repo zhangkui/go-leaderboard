@@ -1,6 +1,11 @@
 package leaderboard
 
-import "sort"
+import (
+	"errors"
+	"sort"
+)
+
+var ErrNegativeScore = errors.New("score must be non-negative")
 
 // Entry represents a single user's leaderboard entry.
 type Entry struct {
@@ -23,6 +28,9 @@ func New() *Leaderboard {
 
 // UpdateScore sets the user's score and re-sorts the leaderboard.
 func (lb *Leaderboard) UpdateScore(userID string, score int64) error {
+	if score < 0 {
+		return ErrNegativeScore
+	}
 	lb.scores[userID] = score
 	lb.resort()
 	return nil

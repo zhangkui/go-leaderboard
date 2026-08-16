@@ -35,7 +35,9 @@ func TestScoreAndTopN(t *testing.T) {
 
 func TestRank(t *testing.T) {
 	lb := leaderboard.New()
-	lb.UpdateScore("alice", 100)
+	if err := lb.UpdateScore("alice", 100); err != nil {
+		t.Fatal(err)
+	}
 	mux := NewMux(lb)
 
 	req := httptest.NewRequest(http.MethodGet, "/rank/alice", nil)
@@ -54,5 +56,21 @@ func TestBadScore(t *testing.T) {
 	mux.ServeHTTP(w, req)
 	if w.Code != http.StatusBadRequest {
 		t.Errorf("expected 400, got %d", w.Code)
+	}
+}
+
+func TestScoreRejectsNegativeScore(t *testing.T) {
+	lb := leaderboard.New()
+	mux := NewMux(lb)
+
+	req := httptest.NewRequest(http.MethodPost, "/score", strings.NewReader(`{"user_id":"alice","score":-50}`))
+	w := httptest.NewRecorder()
+	mux.ServeHTTP(w, req)
+
+	if w.Code != http.StatusBadRequest {
+		t.Fatalf("expected 400, got %d", w.Code)
+	}
+	if entry := lb.GetUserEntry("alice"); entry != nil {
+		t.Fatalf("expected no entry to be created, got %+v", entry)
 	}
 }
