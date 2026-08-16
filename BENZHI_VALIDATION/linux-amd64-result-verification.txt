@@ -1,0 +1,4 @@
+diagnosis 类型：test 模型只诊断不改源码
+base 红: expected top score 1000 first on page 1, got 990
+模型验证：go build + go test ./... + 专项复现测试 + offset 计算验证脚本
+go build: BUILD_OK

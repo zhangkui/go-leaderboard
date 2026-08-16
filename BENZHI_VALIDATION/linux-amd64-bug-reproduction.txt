@@ -1,0 +1,3 @@
+base 红: expected top score 1000 first on page 1, got 990
+诊断结论：offset := page * size 应为 (page-1)*size
+模型写了临时复现测试 repro_pagination_test.go 验证后自行删除

@@ -1,0 +1,2 @@
+docker build --platform linux/amd64 -t go-leaderboard-bug4-candidate -f benzhi.Dockerfile .
+=> 成功

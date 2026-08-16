@@ -1,0 +1,33 @@
+package api
+
+import (
+	"encoding/json"
+	"net/http"
+	"net/http/httptest"
+	"testing"
+
+	"go-leaderboard/internal/leaderboard"
+)
+
+func TestPrivatePaginateFirstPage(t *testing.T) {
+	lb := leaderboard.New()
+	for i := 0; i < 25; i++ {
+		lb.UpdateScore(string(rune('A'+i)), int64(1000-i))
+	}
+	mux := NewMux(lb)
+	req := httptest.NewRequest(http.MethodGet, "/leaderboard?page=1&size=10", nil)
+	rec := httptest.NewRecorder()
+	mux.ServeHTTP(rec, req)
+
+	var entries []leaderboard.Entry
+	if err := json.NewDecoder(rec.Body).Decode(&entries); err != nil {
+		t.Fatal(err)
+	}
+	if len(entries) != 10 {
+		t.Fatalf("expected 10 entries on page 1, got %d", len(entries))
+	}
+	// page 1 must start with the top scorer (score 1000)
+	if entries[0].Score != 1000 {
+		t.Errorf("expected top score 1000 first on page 1, got %d", entries[0].Score)
+	}
+}

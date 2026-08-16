@@ -1,0 +1,2 @@
+docker run --rm go-leaderboard-bug4-candidate bash -c "go version"
+=> go version go1.22.12 linux/amd64
